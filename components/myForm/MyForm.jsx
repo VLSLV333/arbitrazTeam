@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 
 import getObjectKeyByValue from '../../helpers/getObjValue';
 
-let specialPhoneInput = '';
+let specialPhoneInput = null;
 
 function MyForm() {
   const [fNameHasError, setFNameHasError] = useState(false);
@@ -77,6 +77,7 @@ function MyForm() {
       return;
     }
 
+    // eslint-disable-next-line no-console
     console.log(providedName, providedSecondName, providedEmail, providedPhone);
   };
 
@@ -177,6 +178,7 @@ function MyForm() {
             <Form.Text className="text-danger">{phoneErrorMessage}</Form.Text>
           )}
         </Form.Group>
+
         <Button variant="primary" type="submit">
           Submit
         </Button>
