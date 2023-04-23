@@ -19,7 +19,16 @@ function MyForm() {
     'Please, enter correct phone number',
   );
 
+  const [fNameErrorMessage, setFNameErrorMessage] = useState(
+    'Please, enter atleast 2 symbols',
+  );
+
+  const [lNameErrorMessage, setLNameErrorMessage] = useState(
+    'Please, enter atleast 2 symbols',
+  );
+
   const namesRegEx = /^[a-z]{2,}$/i;
+  const shortNamesRegEx = /^[a-z]{1,}$/i;
   const emailRegEx = /^.+@.+\..+$/i;
 
   const formHandler = (event) => {
@@ -27,21 +36,41 @@ function MyForm() {
 
     let formHasError = false;
 
+    const namesErrorHandler = (which, message) => {
+      formHasError = true;
+      if (which === 'f') {
+        setFNameErrorMessage(message);
+        setFNameHasError(true);
+      }
+      if (which === 'l') {
+        setLNameErrorMessage(message);
+        setLNameHasError(true);
+      }
+    };
+
     const providedName = event.target[0].value;
-    const providedSecondName = event.target[1].value;
+    const providedLName = event.target[1].value;
     const providedEmail = event.target[2].value;
     const providedPhone = specialPhoneInput.getNumber();
 
-    if (!namesRegEx.test(providedName)) {
-      setFNameHasError(true);
-      formHasError = true;
+    if (
+      providedName.trim() === '' ||
+      (providedName.trim().length === 1 && shortNamesRegEx.test(providedName))
+    ) {
+      namesErrorHandler('f', 'Please, enter atleast 2 symbols');
+    } else if (!namesRegEx.test(providedName)) {
+      namesErrorHandler('f', 'Please, use only latin letters');
     } else {
       setFNameHasError(false);
     }
 
-    if (!namesRegEx.test(providedSecondName)) {
-      setLNameHasError(true);
-      formHasError = true;
+    if (
+      providedLName.trim() === '' ||
+      (providedLName.trim().length === 1 && shortNamesRegEx.test(providedLName))
+    ) {
+      namesErrorHandler('l', 'Please, enter atleast 2 symbols');
+    } else if (!namesRegEx.test(providedLName)) {
+      namesErrorHandler('l', 'Please, use only latin letters');
     } else {
       setLNameHasError(false);
     }
@@ -78,7 +107,7 @@ function MyForm() {
     }
 
     // eslint-disable-next-line no-console
-    console.log(providedName, providedSecondName, providedEmail, providedPhone);
+    console.log(providedName, providedLName, providedEmail, providedPhone);
   };
 
   useEffect(() => {
@@ -120,9 +149,7 @@ function MyForm() {
             </Form.Text>
           )}
           {fNameHasError && (
-            <Form.Text className="text-danger">
-              Please, enter atleast 2 symbols
-            </Form.Text>
+            <Form.Text className="text-danger">{fNameErrorMessage}</Form.Text>
           )}
         </Form.Group>
 
@@ -138,9 +165,7 @@ function MyForm() {
             </Form.Text>
           )}
           {lNameHasError && (
-            <Form.Text className="text-danger">
-              Please, enter atleast 2 symbols
-            </Form.Text>
+            <Form.Text className="text-danger">{lNameErrorMessage}</Form.Text>
           )}
         </Form.Group>
 
